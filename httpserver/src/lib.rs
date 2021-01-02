@@ -28,7 +28,7 @@ fn build_response(request: &http::HTTPRequest, files: &HashMap<String, String>) 
     let mut response: Vec<u8> = Vec::new();
 
     if let Some(file) = files.get(&request.path) {
-        let file = std::fs::read_to_string(file).expect("Failed to read file.html");
+        let file = std::fs::read_to_string(file).expect(format!("Failed to read {}", file).as_str());
         response.append(&mut file.into_bytes());
     } else {
         if request.path == "/kill" {
