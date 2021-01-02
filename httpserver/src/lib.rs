@@ -6,11 +6,33 @@ mod url;
 use std::net::{TcpListener, TcpStream};
 use std::io::{Write, Read, Result};
 use std::collections::HashMap;
+use crate::http::{HTTPResponse, status_code_to_name};
+
+fn write_status_and_version(socket: &mut TcpStream, response: &HTTPResponse) -> Result<()> {
+    socket.write_all(b"HTTP/1.1 ")?;
+    socket.write_all(response.status_code.to_string().as_bytes())?;
+    socket.write_all(b" ")?;
+    socket.write_all(status_code_to_name(response.status_code).as_bytes())?;
+    socket.write_all(b"\r\n")?;
+    Ok(())
+}
+
+fn write_headers(socket: &mut TcpStream, response: &HTTPResponse) -> Result<()> {
+    for header in &response.headers {
+        socket.write_all(header.name.as_bytes())?;
+        socket.write_all(b": ")?;
+        socket.write_all(header.value.as_bytes())?;
+        socket.write_all(b"\r\n")?;
+    }
+    Ok(())
+}
 
 fn send_response(socket: &mut TcpStream, response: Vec<u8>) -> Result<()> {
+    let http_response = HTTPResponse::ok();
     let mut length = response.len().to_string().into_bytes().into_boxed_slice();
-    socket.write_all(b"HTTP/1.1 200 OK\r\n")?;
-    socket.write_all(b"Server: StealMyPC\r\n")?;
+    write_status_and_version(socket, &http_response)?;
+    write_headers(socket, &http_response)?;
+    socket.write_all(b"Server: Generic boringserver\r\n")?;
     socket.write_all(b"Content-Type: text/html;charset=utf-8\r\n")?;
     socket.write_all(b"Content-Length: ")?;
     socket.write_all(length.as_mut())?;

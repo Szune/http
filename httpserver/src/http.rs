@@ -4,6 +4,8 @@ pub struct Header {
     pub value: String,
 }
 
+/* HTTPRequest */
+
 #[derive(Debug)]
 pub struct HTTPRequest {
     pub method: String,
@@ -50,5 +52,27 @@ pub fn parse_request(request: String) -> HTTPRequest {
         version,
         headers,
         body,
+    }
+}
+
+/* HTTPResponse */
+pub struct HTTPResponse {
+    pub status_code: u16,
+    pub headers: Vec<Header>,
+}
+
+impl HTTPResponse {
+    pub const fn ok() -> HTTPResponse {
+        HTTPResponse {
+            status_code: 200,
+            headers: Vec::new(),
+        }
+    }
+}
+
+pub const fn status_code_to_name(code: u16) -> &'static str {
+    match code {
+        200 => "OK",
+        _ => "",
     }
 }

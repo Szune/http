@@ -1,8 +1,7 @@
 use std::collections::VecDeque;
-use std::iter::{Iterator, Map};
+use std::iter::{Iterator};
 
 pub struct Buffer<I: Iterator> {
-    size: usize,
     values: VecDeque<Option<I::Item>>,
     iter: I,
 }
@@ -36,7 +35,6 @@ pub trait Buffered : Iterator {
         let buffer = Buffer {
             values,
             iter: self,
-            size: buffer_size,
         };
         buffer
     }

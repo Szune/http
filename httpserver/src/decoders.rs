@@ -1,5 +1,4 @@
 use crate::buffer::Buffered;
-use std::borrow::Borrow;
 
 pub struct FormPair {
     pub name: String,

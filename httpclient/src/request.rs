@@ -1,4 +1,4 @@
-use std::net::{TcpListener, TcpStream};
+use std::net::{TcpStream};
 use std::io::{Write, Read, Result};
 
 fn send(socket: &mut TcpStream, response: Vec<u8>) -> Result<()> {
